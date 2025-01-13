@@ -14,8 +14,10 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd mbstring zip opcache \
+    && docker-php-ext-install -j$(nproc) gd mbstring zip opcache mysqli \
     && docker-php-ext-enable opcache
+
+ENV TZ="Asia/Bangkok"
 
 # Set up Nginx
 RUN mkdir -p /run/nginx
@@ -25,7 +27,8 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy application files
 WORKDIR /var/www/html
-COPY . .
+# COPY . .
+COPY index.php .
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
